@@ -203,3 +203,33 @@ document.addEventListener("DOMContentLoaded", () => {
   filterQuotes();
   fetchQuotesFromServer();
 });
+
+
+// -------------------------------
+// POST local quotes to server
+// -------------------------------
+async function postQuotesToServer() {
+  try {
+    const response = await fetch(SERVER_URL, {
+      method: "POST", // POST method
+      headers: {
+        "Content-Type": "application/json" // JSON payload
+      },
+      body: JSON.stringify(quotes) // send local quotes
+    });
+
+    const data = await response.json();
+    console.log("Quotes posted to server:", data);
+    notifyUser("Local quotes posted to server successfully!");
+  } catch (err) {
+    console.error("Failed to post quotes to server:", err);
+    notifyUser("Failed to post quotes to server.");
+  }
+}
+
+// Optional: call this manually with a button
+// Example: create a new button for posting if needed
+// const postBtn = document.createElement("button");
+// postBtn.textContent = "Post Quotes to Server";
+// postBtn.onclick = postQuotesToServer;
+// document.body.appendChild(postBtn);
