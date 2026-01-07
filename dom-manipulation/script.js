@@ -233,3 +233,38 @@ async function postQuotesToServer() {
 // postBtn.textContent = "Post Quotes to Server";
 // postBtn.onclick = postQuotesToServer;
 // document.body.appendChild(postBtn);
+
+
+async function syncQuotes() {
+  try {
+    // 1️⃣ Fetch quotes from server
+    const res = await fetch(SERVER_URL);
+    const serverData = await res.json();
+    const serverQuotes = serverData.slice(0, 5).map(item => ({
+      text: item.title,
+      category: "Server"
+    }));
+
+    // 2️⃣ Conflict resolution: server data overrides local
+    quotes = [...serverQuotes];
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+
+    // 3️⃣ Optionally, post local quotes to server
+    await fetch(SERVER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(quotes)
+    });
+
+    populateCategories();
+    filterQuotes();
+    notifyUser("Quotes synced with server successfully!");
+  } catch (err) {
+    console.error("Sync failed:", err);
+    notifyUser("Sync failed.");
+  }
+}
+
+// Call this instead of fetchQuotesFromServer
+syncServerBtn.addEventListener("click", syncQuotes);
+setInterval(syncQuotes, 30000); // periodic sync
