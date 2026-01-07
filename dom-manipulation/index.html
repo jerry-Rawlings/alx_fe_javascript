@@ -11,20 +11,28 @@
 
   <div id="quoteDisplay"></div>
 
+  <!-- Buttons -->
   <button id="newQuote">Show New Quote</button>
-
-  <!-- REQUIRED BY CHECKER -->
   <button id="exportQuotes">Export Quotes</button>
+  <button id="syncServer">Sync With Server</button>
 
+  <!-- Category filter -->
   <select id="categoryFilter" onchange="filterQuotes()">
-  <option value="all">All Categories</option>
-</select>
+    <option value="all">All Categories</option>
+  </select>
 
-<p id="syncStatus"></p>
+  <!-- Sync notification -->
+  <p id="syncStatus"></p>
 
-
-  <!-- REQUIRED BY CHECKER -->
+  <!-- JSON import -->
   <input type="file" id="importFile" accept=".json" />
+
+  <!-- Quote form -->
+  <div>
+    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <button id="addQuoteBtn">Add Quote</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
