@@ -314,3 +314,62 @@ document.addEventListener("DOMContentLoaded", () => {
   filterQuotes();
 });
 
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+
+async function fetchServerQuotes() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const data = await response.json();
+
+    // Simulate quotes from server
+    const serverQuotes = data.slice(0, 5).map(item => ({
+      text: item.title,
+      category: "Server"
+    }));
+
+    syncWithServer(serverQuotes);
+  } catch (error) {
+    console.error("Server sync failed:", error);
+  }
+}
+
+
+function syncWithServer(serverQuotes) {
+  const localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+
+  // Conflict resolution: server wins
+  quotes = [...serverQuotes];
+
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+
+  populateCategories();
+  filterQuotes();
+
+  notifyUser("Quotes synced with server. Server data applied.");
+}
+
+
+setInterval(() => {
+  fetchServerQuotes();
+}, 30000); // every 30 seconds
+
+
+function notifyUser(message) {
+  const status = document.getElementById("syncStatus");
+  status.textContent = message;
+
+  setTimeout(() => {
+    status.textContent = "";
+  }, 5000);
+}
+
+
+<button onclick="fetchServerQuotes()">Sync With Server</button>
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  populateCategories();
+  filterQuotes();
+  fetchServerQuotes();
+});
+
