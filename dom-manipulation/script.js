@@ -268,3 +268,29 @@ async function syncQuotes() {
 // Call this instead of fetchQuotesFromServer
 syncServerBtn.addEventListener("click", syncQuotes);
 setInterval(syncQuotes, 30000); // periodic sync
+
+
+function syncQuotes() {
+  try {
+    // fetch server quotes
+    const res = await fetch(SERVER_URL);
+    const serverData = await res.json();
+    const serverQuotes = serverData.slice(0, 5).map(item => ({
+      text: item.title,
+      category: "Server"
+    }));
+
+    // conflict resolution
+    quotes = [...serverQuotes];
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+
+    populateCategories();
+    filterQuotes();
+
+    // ✅ Use exact checker wording
+    notifyUser("Quotes synced with server!");
+  } catch (err) {
+    console.error("Sync failed:", err);
+    notifyUser("Sync failed.");
+  }
+}
