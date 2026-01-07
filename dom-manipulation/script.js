@@ -1,26 +1,30 @@
-// Quotes array (objects with text and category)
+// Array of quote objects
 const quotes = [
   { text: "Learning never exhausts the mind.", category: "Education" },
   { text: "Talk is cheap. Show me the code.", category: "Programming" },
   { text: "Success is the sum of small efforts repeated daily.", category: "Motivation" }
 ];
 
-// DOM elements
+// Get DOM elements
 const quoteDisplay = document.getElementById("quoteDisplay");
-const newQuoteBtn = document.getElementById("newQuote");
+const newQuoteButton = document.getElementById("newQuote");
 
-// Function to show a random quote
-function showRandomQuote() {
+// REQUIRED FUNCTION: displayRandomQuote
+function displayRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
 
-  quoteDisplay.textContent = `"${quote.text}" — ${quote.category}`;
+  // REQUIRED: use innerHTML
+  quoteDisplay.innerHTML = `
+    <p>"${quote.text}"</p>
+    <small>Category: ${quote.category}</small>
+  `;
 }
 
 // Button event listener
-newQuoteBtn.addEventListener("click", showRandomQuote);
+newQuoteButton.addEventListener("click", displayRandomQuote);
 
-// Function to create the Add Quote form dynamically
+// REQUIRED FUNCTION: createAddQuoteForm
 function createAddQuoteForm() {
   const formDiv = document.createElement("div");
 
@@ -35,7 +39,7 @@ function createAddQuoteForm() {
   categoryInput.placeholder = "Enter quote category";
 
   const addButton = document.createElement("button");
-  addButton.textContent = "Add Quote";
+  addButton.innerHTML = "Add Quote";
   addButton.addEventListener("click", addQuote);
 
   formDiv.appendChild(quoteInput);
@@ -47,21 +51,24 @@ function createAddQuoteForm() {
 
 // Function to add a new quote
 function addQuote() {
-  const text = document.getElementById("newQuoteText").value.trim();
-  const category = document.getElementById("newQuoteCategory").value.trim();
+  const quoteText = document.getElementById("newQuoteText").value.trim();
+  const quoteCategory = document.getElementById("newQuoteCategory").value.trim();
 
-  if (text === "" || category === "") {
-    alert("Please fill in both fields");
+  if (quoteText === "" || quoteCategory === "") {
+    alert("Please enter both quote text and category");
     return;
   }
 
-  quotes.push({ text, category });
+  quotes.push({
+    text: quoteText,
+    category: quoteCategory
+  });
 
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
 
-  quoteDisplay.textContent = "Quote added successfully!";
+  quoteDisplay.innerHTML = "<p>Quote added successfully!</p>";
 }
 
-// Create the form on page load
+// Create form on page load
 createAddQuoteForm();
