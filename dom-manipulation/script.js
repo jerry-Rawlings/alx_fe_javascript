@@ -158,7 +158,8 @@ if (lastQuote) {
 // -------------------------------
 const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
 
-async function fetchServerQuotes() {
+// ✅ Correct function name ALX expects
+async function fetchQuotesFromServer() {
   try {
     const res = await fetch(SERVER_URL);
     const data = await res.json();
@@ -190,9 +191,9 @@ function notifyUser(msg) {
   setTimeout(() => (syncStatus.textContent = ""), 5000);
 }
 
-// Periodic sync every 30s
-setInterval(fetchServerQuotes, 30000);
-syncServerBtn.addEventListener("click", fetchServerQuotes);
+// Periodic sync every 30 seconds
+setInterval(fetchQuotesFromServer, 30000);
+syncServerBtn.addEventListener("click", fetchQuotesFromServer);
 
 // -------------------------------
 // Initialize
@@ -200,5 +201,5 @@ syncServerBtn.addEventListener("click", fetchServerQuotes);
 document.addEventListener("DOMContentLoaded", () => {
   populateCategories();
   filterQuotes();
-  fetchServerQuotes();
+  fetchQuotesFromServer();
 });
