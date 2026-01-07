@@ -226,3 +226,91 @@ if (lastQuote) {
 
 // Initialize form
 createAddQuoteForm();
+
+let quotes = JSON.parse(localStorage.getItem("quotes")) || [
+  { text: "Stay hungry, stay foolish.", category: "Motivation" },
+  { text: "Code is like humor. When you have to explain it, it’s bad.", category: "Programming" }
+];
+
+const quoteDisplay = document.getElementById("quoteDisplay");
+const categoryFilter = document.getElementById("categoryFilter");
+
+function populateCategories() {
+  const categories = [...new Set(quotes.map(q => q.category))];
+
+  // Reset dropdown
+  categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
+
+  categories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+
+  // Restore last selected filter
+  const savedFilter = localStorage.getItem("selectedCategory");
+  if (savedFilter) {
+    categoryFilter.value = savedFilter;
+  }
+}
+
+
+function filterQuotes() {
+  const selectedCategory = categoryFilter.value;
+  localStorage.setItem("selectedCategory", selectedCategory);
+
+  let filteredQuotes = quotes;
+
+  if (selectedCategory !== "all") {
+    filteredQuotes = quotes.filter(
+      quote => quote.category === selectedCategory
+    );
+  }
+
+  displayQuotes(filteredQuotes);
+}
+
+
+function displayQuotes(quotesToDisplay) {
+  quoteDisplay.innerHTML = "";
+
+  if (quotesToDisplay.length === 0) {
+    quoteDisplay.textContent = "No quotes found.";
+    return;
+  }
+
+  quotesToDisplay.forEach(quote => {
+    const p = document.createElement("p");
+    p.textContent = `"${quote.text}" — ${quote.category}`;
+    quoteDisplay.appendChild(p);
+  });
+}
+
+
+function addQuote() {
+  const textInput = document.getElementById("newQuoteText");
+  const categoryInput = document.getElementById("newQuoteCategory");
+
+  if (!textInput.value || !categoryInput.value) return;
+
+  const newQuote = {
+    text: textInput.value,
+    category: categoryInput.value
+  };
+
+  quotes.push(newQuote);
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+
+  textInput.value = "";
+  categoryInput.value = "";
+
+  populateCategories();
+  filterQuotes();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  populateCategories();
+  filterQuotes();
+});
+
